@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { Link } from "react-router-dom";
-import { Badge, DialogContentText } from "@mui/material";
+import { Badge, DialogActions, DialogContentText } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { authActions } from "../store/authSlice";
 import { useSelector, useDispatch } from "react-redux";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
+import Cart from "./Cart";
 
 const Navbar = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -77,7 +77,18 @@ const Navbar = () => {
 
       {/* this dialog open when user click on cart icon */}
       <Dialog open={openDialog} onClose={handleClose}>
-        <Button onClick={handleClose}>Close</Button>
+        <Cart />
+        <DialogActions>
+          <button
+            className=" text-[#1976D2] px-2 py-[2px] rounded hover:bg-[#1976D2] hover:text-white "
+            onClick={handleClose}
+          >
+            Close
+          </button>
+          <button className=" text-white bg-[#1976D2] rounded px-2 py-[2px]  ">
+            Order
+          </button>
+        </DialogActions>
       </Dialog>
     </nav>
   );
