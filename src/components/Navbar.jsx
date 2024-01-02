@@ -16,7 +16,7 @@ const Navbar = () => {
           >
             Products
           </Link>
-          <Badge badgeContent={4} color="secondary">
+          <Badge badgeContent={49} color="secondary">
             <AddShoppingCartIcon className=" text-white cursor-pointer" />
           </Badge>
         </div>

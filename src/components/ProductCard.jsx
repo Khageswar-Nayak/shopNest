@@ -1,6 +1,8 @@
 import React from "react";
 import Rating from "@mui/material/Rating";
-import Layout from "../layout/Layout";
+
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const obj = {
   id: 1,
@@ -23,8 +25,14 @@ const obj = {
 const ProductCard = ({ product }) => {
   return (
     <>
-      <div className="bg-white rounded-lg overflow-hidden shadow-2xl h-fit max-w-64 transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110">
+      <div className="bg-white ml-4 rounded-lg overflow-hidden shadow-2xl h-fit max-w-64 transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110">
         <div className=" relative">
+          {/* <LazyLoadImage
+            effect="blur"
+            src={product.thumbnail}
+            alt={product.title}
+            className="w-full h-48  overflow-hidden"
+          /> */}
           <img
             className="w-full h-48  overflow-hidden"
             src={product.thumbnail}
