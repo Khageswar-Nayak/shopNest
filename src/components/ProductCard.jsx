@@ -1,38 +1,19 @@
 import React from "react";
 import Rating from "@mui/material/Rating";
-
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import "react-lazy-load-image-component/src/effects/blur.css";
-
-const obj = {
-  id: 1,
-  title: "iPhone 9",
-  description: "An apple mobile which is nothing like apple",
-  price: 549,
-  discountPercentage: 12.96,
-  rating: 4.69,
-  stock: 94,
-  brand: "Apple",
-  category: "smartphones",
-  thumbnail: "https://placekitten.com/300/200", // Placeholder image URL
-  images: [
-    "https://placekitten.com/400/300",
-    "https://placekitten.com/400/300",
-    "https://placekitten.com/400/300",
-  ],
-};
+import { useDispatch } from "react-redux";
+import { cartActions } from "../store/cartSlice";
 
 const ProductCard = ({ product }) => {
+  const dispatch = useDispatch();
+
+  const addToCartHandler = (item) => {
+    dispatch(cartActions.addToCart({ ...item, quantity: 1 }));
+  };
+
   return (
     <>
       <div className="bg-white ml-4 rounded-lg overflow-hidden shadow-2xl h-fit max-w-64 transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110">
         <div className=" relative">
-          {/* <LazyLoadImage
-            effect="blur"
-            src={product.thumbnail}
-            alt={product.title}
-            className="w-full h-48  overflow-hidden"
-          /> */}
           <img
             className="w-full h-48  overflow-hidden"
             src={product.thumbnail}
@@ -76,7 +57,10 @@ const ProductCard = ({ product }) => {
             </span>
           </div>
         </div>
-        <button className=" text-center bg-[#1976D2] w-full text-white  py-2 font-medium ">
+        <button
+          onClick={() => addToCartHandler(product)}
+          className=" text-center bg-[#1976D2] w-full text-white  py-2 font-medium "
+        >
           Add to Cart
         </button>
       </div>
