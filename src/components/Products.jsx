@@ -8,6 +8,7 @@ const ProductCard = lazy(() => import("./ProductCard"));
 
 const Products = () => {
   const [products, setProducts] = useState([]);
+  const [emptyProducts, setEmptyProducts] = useState(false);
   const [category, setCategory] = useState("All products");
   const [sorting, setSorting] = useState("");
   const [loading, setLoading] = useState(true);
@@ -56,28 +57,18 @@ const Products = () => {
 
       if (sortedProducts.length > 0) {
         setProducts(sortedProducts);
+        setEmptyProducts(false);
       } else if (
-        sortedProducts.length === 0 &&
-        sorting === "Rs. 500 and Above"
+        (sortedProducts.length === 0 && sorting === "Rs. 500 and Above") ||
+        (sortedProducts.length === 0 && sorting === "Rs. 1000 and Above") ||
+        (sortedProducts.length === 0 && sorting === "Rs. 0 - Rs. 1000") ||
+        (sortedProducts.length === 0 && sorting === "Rs. 1000 - Rs. 2000")
       ) {
         setProducts([]);
-      } else if (
-        sortedProducts.length === 0 &&
-        sorting === "Rs. 1000 and Above"
-      ) {
-        setProducts([]);
-      } else if (
-        sortedProducts.length === 0 &&
-        sorting === "Rs. 0 - Rs. 1000"
-      ) {
-        setProducts([]);
-      } else if (
-        sortedProducts.length === 0 &&
-        sorting === "Rs. 1000 - Rs. 2000"
-      ) {
-        setProducts([]);
+        setEmptyProducts(true);
       } else {
         setProducts(productsByCategory);
+        setEmptyProducts(false);
       }
     });
   }, [sorting, category]);
@@ -139,7 +130,7 @@ const Products = () => {
         </div>
         <Scrollbars style={{ width: "100%", height: "100vh" }}>
           <div className="grid grid-cols-4 gap-y-12 max-h-screen">
-            {products.length === 0 && <p>No products found.</p>}
+            {emptyProducts && <p>No products found.</p>}
             {loading
               ? products.map((_, index) => <ProductSkeleton key={index} />)
               : products

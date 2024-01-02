@@ -1,31 +1,43 @@
 import React, { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material"; // Import eye icons from a suitable library
 import Layout from "../layout/Layout";
+import { useSelector, useDispatch } from "react-redux";
+import { authActions } from "../store/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
-  const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
+  const [userName, setUserName] = useState("atuny0");
+  const [password, setPassword] = useState("9uQFF1Lh");
   const [showPassword, setShowPassword] = useState(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
-    fetch("https://dummyjson.com/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: userName,
-        password: password,
-        // expiresInMins: 60, // optional
-      }),
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log("res", res);
+
+    try {
+      const response = await fetch("https://dummyjson.com/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: userName,
+          password: password,
+        }),
       });
+
+      const data = await response.json();
+      console.log("data", data);
+
+      dispatch(authActions.login(data));
+      navigate("/products");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
