@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { Link } from "react-router-dom";
-import { Badge, DialogActions, DialogContentText } from "@mui/material";
+import { Badge, DialogActions } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { authActions } from "../store/authSlice";
@@ -13,6 +14,7 @@ const Navbar = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const token = useSelector((state) => state.auth.token);
+  const cartProducts = useSelector((state) => state.cart.cartProducts);
   const dispatch = useDispatch();
 
   const dialogHandler = () => {
@@ -33,32 +35,54 @@ const Navbar = () => {
   };
   return (
     <nav className="bg-[#1976D2] p-4 fixed w-full z-50">
-      <div className="container mx-auto flex items-center justify-between px-4">
+      <div className="container mx-auto flex items-center justify-between sm:px-4">
         <div className="text-white text-3xl font-bold">ShopNest</div>
 
         <div className="flex  justify-end space-x-4 md:gap-12">
           <Link
             to="/products"
-            className="text-white hover:text-gray-300 text-xl"
+            className="text-white hover:text-gray-300 sm:text-xl"
             onClick={openSnakbarHandler}
           >
             Products
           </Link>
 
-          <Badge badgeContent={49} color="secondary">
+          {/* cart icon for login user */}
+          {token && (
+            <Badge badgeContent={cartProducts.length} color="secondary">
+              <AddShoppingCartIcon
+                className=" text-white cursor-pointer"
+                onClick={dialogHandler}
+              />
+            </Badge>
+          )}
+
+          {/* cart icon for logout user */}
+          {!token && (
             <AddShoppingCartIcon
               className=" text-white cursor-pointer"
-              onClick={dialogHandler}
+              onClick={openSnakbarHandler}
             />
-          </Badge>
-
+          )}
+          {/* logout button for desktop/laptop */}
           {token && (
             <Link
               to="/"
               onClick={() => dispatch(authActions.logout())}
-              className="bg-red-500 text-white px-4 pb-[2px] font-medium rounded-md hover:bg-red-600 transition duration-300"
+              className="hidden bg-red-500 text-white px-4 pb-[2px] font-medium rounded-md hover:bg-red-600 transition duration-300 sm:block"
             >
               Logout
+            </Link>
+          )}
+
+          {/* logout icon for mobile device */}
+          {token && (
+            <Link
+              className=" sm:hidden"
+              to="/"
+              onClick={() => dispatch(authActions.logout())}
+            >
+              <LogoutIcon className="   text-white sm:hidden" />
             </Link>
           )}
         </div>
@@ -76,7 +100,7 @@ const Navbar = () => {
       </Snackbar>
 
       {/* this dialog open when user click on cart icon */}
-      <Dialog open={openDialog} onClose={handleClose}>
+      <Dialog open={openDialog} onClose={handleClose} maxWidth="sm">
         <Cart />
         <DialogActions>
           <button

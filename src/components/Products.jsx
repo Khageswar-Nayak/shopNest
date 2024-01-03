@@ -91,9 +91,9 @@ const Products = () => {
 
   return (
     <Layout>
-      <div className=" p-8 pl-16 pt-20">
-        <div className=" flex justify-between pb-4 ">
-          <div>
+      <div className=" p-8 pl-4 sm:pl-16 pt-20">
+        <div className=" flex flex-col-reverse sm:flex-row gap-[8px] justify-between pb-4 ">
+          <div className=" flex justify-between sm:justify-start">
             <select
               onChange={(e) => setCategory(e.target.value)}
               className=" rounded border-[1px] border-slate-500	 focus:border-slate-500 p-1 outline-none w-32	"
@@ -108,7 +108,7 @@ const Products = () => {
             </select>
             <select
               onChange={(e) => setSorting(e.target.value)}
-              className=" rounded border-[1px] border-slate-500	 focus:border-slate-500 p-1 outline-none w-[163px] ml-1	"
+              className=" rounded border-[1px] border-slate-500	 focus:border-slate-500 p-1 outline-none w-[60px] sm:w-[163px] ml-1	"
             >
               <option value="" disabled hidden selected>
                 sort
@@ -124,12 +124,12 @@ const Products = () => {
           <input
             type="search"
             placeholder="Search products..."
-            className=" mr-12 border-[1px] border-slate-500 outline-none p-1 rounded "
+            className="  border-[2px] border-[#5ea3e9] border-dashed	  outline-none p-1 rounded sm:mr-12"
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
         <Scrollbars style={{ width: "100%", height: "100vh" }}>
-          <div className="grid grid-cols-4 gap-y-12 max-h-screen">
+          <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-y-12 max-h-screen">
             {emptyProducts && <p>No products found.</p>}
             {loading
               ? products.map((_, index) => <ProductSkeleton key={index} />)

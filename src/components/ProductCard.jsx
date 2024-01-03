@@ -1,18 +1,21 @@
 import React from "react";
 import Rating from "@mui/material/Rating";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "../store/cartSlice";
 
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
+  const email = useSelector((state) => state.auth.email);
 
-  const addToCartHandler = (item) => {
-    dispatch(cartActions.addToCart({ ...item, quantity: 1 }));
+  const addToCartHandler = (newProduct) => {
+    const modifiedNewProduct = { ...newProduct, quantity: 1 };
+
+    dispatch(cartActions.addToCart({ modifiedNewProduct, email }));
   };
 
   return (
     <>
-      <div className="bg-white ml-4 rounded-lg overflow-hidden shadow-2xl h-fit max-w-64 transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110">
+      <div className="bg-white sm:ml-4 rounded-lg overflow-hidden shadow-2xl h-fit sm:max-w-64 transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110">
         <div className=" relative">
           <img
             className="w-full h-48  overflow-hidden"

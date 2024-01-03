@@ -4,10 +4,11 @@ import Layout from "../layout/Layout";
 import { useSelector, useDispatch } from "react-redux";
 import { authActions } from "../store/authSlice";
 import { useNavigate } from "react-router-dom";
+import { cartActions } from "../store/cartSlice";
 
 const LoginForm = () => {
-  const [userName, setUserName] = useState("atuny0");
-  const [password, setPassword] = useState("9uQFF1Lh");
+  const [userName, setUserName] = useState("kdulyt");
+  const [password, setPassword] = useState("5t6q4KC7O");
   const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch();
@@ -32,11 +33,17 @@ const LoginForm = () => {
 
       const data = await response.json();
       console.log("data", data);
-
-      dispatch(authActions.login(data));
-      navigate("/products");
+      if (data.message === "Invalid credentials") {
+        alert("Invalid credentials");
+      } else {
+        dispatch(authActions.login(data));
+        const savedCartProducts =
+          JSON.parse(await localStorage.getItem(`${data.email}`)) || [];
+        dispatch(cartActions.setCart(savedCartProducts));
+        navigate("/products");
+      }
     } catch (error) {
-      console.error(error);
+      console.error("error", error);
     }
   };
 
