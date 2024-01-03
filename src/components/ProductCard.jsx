@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import Rating from "@mui/material/Rating";
 import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "../store/cartSlice";
 
 const ProductCard = ({ product }) => {
+  const [status, setStatus] = useState(false);
   const dispatch = useDispatch();
   const email = useSelector((state) => state.auth.email);
 
@@ -11,11 +12,15 @@ const ProductCard = ({ product }) => {
     const modifiedNewProduct = { ...newProduct, quantity: 1 };
 
     dispatch(cartActions.addToCart({ modifiedNewProduct, email }));
+    setStatus(true);
+    setTimeout(() => {
+      setStatus(false);
+    }, 5000);
   };
 
   return (
     <>
-      <div className="bg-white sm:ml-4 rounded-lg overflow-hidden shadow-2xl h-fit sm:max-w-64 transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110">
+      <div className="bg-white ml-[10px] mr-[10px] sm:mr-0 sm:ml-4 rounded-lg overflow-hidden shadow-2xl h-fit sm:max-w-64 ">
         <div className=" relative">
           <img
             className="w-full h-48  overflow-hidden"
@@ -64,7 +69,7 @@ const ProductCard = ({ product }) => {
           onClick={() => addToCartHandler(product)}
           className=" text-center bg-[#1976D2] w-full text-white  py-2 font-medium "
         >
-          Add to Cart
+          {status ? <span>Added to Cart</span> : <span>Add to Cart</span>}
         </button>
       </div>
     </>

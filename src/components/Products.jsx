@@ -125,12 +125,14 @@ const Products = () => {
             type="search"
             placeholder="Search products..."
             className="  border-[2px] border-[#5ea3e9] border-dashed	  outline-none p-1 rounded sm:mr-12"
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => setSearch(e.target.value.toLowerCase())}
           />
         </div>
         <Scrollbars style={{ width: "100%", height: "100vh" }}>
           <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-y-12 max-h-screen">
-            {emptyProducts && <p>No products found.</p>}
+            {emptyProducts && (
+              <p className=" text-center">No products found.</p>
+            )}
             {loading
               ? products.map((_, index) => <ProductSkeleton key={index} />)
               : products

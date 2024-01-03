@@ -9,11 +9,13 @@ import { authActions } from "../store/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 import Dialog from "@mui/material/Dialog";
 import Cart from "./Cart";
+import { cartActions } from "../store/cartSlice";
 
 const Navbar = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const token = useSelector((state) => state.auth.token);
+  const email = useSelector((state) => state.auth.email);
   const cartProducts = useSelector((state) => state.cart.cartProducts);
   const dispatch = useDispatch();
 
@@ -35,17 +37,19 @@ const Navbar = () => {
   };
   return (
     <nav className="bg-[#1976D2] p-4 fixed w-full z-50">
-      <div className="container mx-auto flex items-center justify-between sm:px-4">
-        <div className="text-white text-3xl font-bold">ShopNest</div>
+      <div className="container mx-auto flex items-center justify-between  sm:px-4">
+        <Link to="/products" onClick={openSnakbarHandler}>
+          <div className="text-white text-3xl font-bold">ShopNest</div>
+        </Link>
 
         <div className="flex  justify-end space-x-4 md:gap-12">
-          <Link
+          {/* <Link
             to="/products"
             className="text-white hover:text-gray-300 sm:text-xl"
             onClick={openSnakbarHandler}
           >
             Products
-          </Link>
+          </Link> */}
 
           {/* cart icon for login user */}
           {token && (
@@ -95,7 +99,7 @@ const Navbar = () => {
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert severity="error" sx={{ width: "100%" }}>
-          Please Login
+          Please login to access
         </Alert>
       </Snackbar>
 
@@ -109,7 +113,10 @@ const Navbar = () => {
           >
             Close
           </button>
-          <button className=" text-white bg-[#1976D2] rounded px-2 py-[2px]  ">
+          <button
+            onClick={() => dispatch(cartActions.clearCart(email))}
+            className=" text-white bg-[#1976D2] rounded px-2 py-[2px]  "
+          >
             Order
           </button>
         </DialogActions>
