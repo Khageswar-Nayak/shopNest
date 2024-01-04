@@ -10,6 +10,8 @@ import { useSelector, useDispatch } from "react-redux";
 import Dialog from "@mui/material/Dialog";
 import Cart from "./Cart";
 import { cartActions } from "../store/cartSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Navbar = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -25,6 +27,15 @@ const Navbar = () => {
 
   const handleClose = () => {
     setOpenDialog(false);
+  };
+
+  const orderHandler = () => {
+    dispatch(cartActions.clearCart(email));
+    toast.success("Order placed successfully!", {
+      position: "top-right",
+      autoClose: 3000,
+      theme: "colored",
+    });
   };
 
   const openSnakbarHandler = () => {
@@ -43,14 +54,6 @@ const Navbar = () => {
         </Link>
 
         <div className="flex  justify-end space-x-4 md:gap-12">
-          {/* <Link
-            to="/products"
-            className="text-white hover:text-gray-300 sm:text-xl"
-            onClick={openSnakbarHandler}
-          >
-            Products
-          </Link> */}
-
           {/* cart icon for login user */}
           {token && (
             <Badge badgeContent={cartProducts.length} color="secondary">
@@ -114,7 +117,7 @@ const Navbar = () => {
             Close
           </button>
           <button
-            onClick={() => dispatch(cartActions.clearCart(email))}
+            onClick={() => orderHandler()}
             className=" text-white bg-[#1976D2] rounded px-2 py-[2px]  "
           >
             Order

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Rating from "@mui/material/Rating";
 import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "../store/cartSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProductCard = ({ product }) => {
   const [status, setStatus] = useState(false);
@@ -13,6 +15,13 @@ const ProductCard = ({ product }) => {
 
     dispatch(cartActions.addToCart({ modifiedNewProduct, email }));
     setStatus(true);
+
+    toast.success("Product added successfully!", {
+      position: "top-right",
+      autoClose: 3000,
+      theme: "colored",
+    });
+
     setTimeout(() => {
       setStatus(false);
     }, 5000);

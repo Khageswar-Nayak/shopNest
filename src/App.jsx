@@ -5,6 +5,7 @@ import Products from "./components/Products";
 import { useSelector, useDispatch } from "react-redux";
 import { authActions } from "./store/authSlice";
 import { cartActions } from "./store/cartSlice";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   const token = useSelector((state) => state.auth.token);
@@ -12,11 +13,11 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const savedEmail = (await localStorage.getItem("email")) || "";
-      const savedToken = (await localStorage.getItem("token")) || "";
+    const fetchData = () => {
+      const savedEmail = localStorage.getItem("email") || "";
+      const savedToken = localStorage.getItem("token") || "";
       const savedCartProducts =
-        JSON.parse(await localStorage.getItem(`${savedEmail}`)) || [];
+        JSON.parse(localStorage.getItem(`${savedEmail}`)) || [];
 
       console.log("savedEmail", savedEmail);
       console.log("savedCartProducts", savedCartProducts);
@@ -34,15 +35,18 @@ const App = () => {
   }, []);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LoginForm />} />
-        <Route
-          path="/products"
-          element={token ? <Products /> : <LoginForm />}
-        />
-      </Routes>
-    </BrowserRouter>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LoginForm />} />
+          <Route
+            path="/products"
+            element={token ? <Products /> : <LoginForm />}
+          />
+        </Routes>
+      </BrowserRouter>
+      <ToastContainer />
+    </>
   );
 };
 

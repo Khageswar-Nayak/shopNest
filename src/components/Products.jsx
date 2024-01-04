@@ -70,8 +70,20 @@ const Products = () => {
         setProducts(productsByCategory);
         setEmptyProducts(false);
       }
+
+      // logic for if products not found after search
+      const filteredProducts = productsByCategory.filter((product) => {
+        return search.toLowerCase() === ""
+          ? product
+          : product.title.toLowerCase().includes(search);
+      });
+
+      if (filteredProducts.length === 0) {
+        setProducts([]);
+        setEmptyProducts(true);
+      }
     });
-  }, [sorting, category]);
+  }, [sorting, category, search]);
 
   const fetchData = async () => {
     try {

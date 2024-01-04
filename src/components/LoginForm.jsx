@@ -1,18 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material"; // Import eye icons from a suitable library
 import Layout from "../layout/Layout";
 import { useSelector, useDispatch } from "react-redux";
 import { authActions } from "../store/authSlice";
 import { useNavigate } from "react-router-dom";
 import { cartActions } from "../store/cartSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LoginForm = () => {
-  const [userName, setUserName] = useState("kdulyt");
-  const [password, setPassword] = useState("5t6q4KC7O");
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const token = useSelector((state) => state.auth.token);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token) {
+      navigate("/products");
+    }
+  }, []);
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -34,7 +43,12 @@ const LoginForm = () => {
       const data = await response.json();
       console.log("data", data);
       if (data.message === "Invalid credentials") {
-        alert("Invalid credentials");
+        // alert("Invalid credentials");
+        toast.error("Invalid credentials", {
+          position: "top-right",
+          autoClose: 3000,
+          theme: "colored",
+        });
       } else {
         dispatch(authActions.login(data));
         const savedCartProducts =
@@ -99,6 +113,7 @@ const LoginForm = () => {
           </form>
         </div>
       </div>
+      <ToastContainer />
     </Layout>
   );
 };
