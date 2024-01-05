@@ -24,15 +24,11 @@ const cartSlice = createSlice({
         (sum, product) => sum + product.price,
         0
       );
-      console.log("action.payload", action.payload);
+      // console.log("action.payload", action.payload);
     },
     clearCart: (state, action) => {
       state.cartProducts = [];
       state.totalAmount = 0;
-      localStorage.setItem(
-        `${action.payload}`,
-        JSON.stringify(state.cartProducts)
-      );
     },
   },
 });

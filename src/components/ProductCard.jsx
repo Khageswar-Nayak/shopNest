@@ -54,7 +54,7 @@ const ProductCard = ({ product }) => {
             const updatedCartProducts = cartProducts.map((product) =>
               product.id === modifiedNewProduct.id ? updatedProduct : product
             );
-            console.log("updatedCartProducts", updatedCartProducts);
+            // console.log("updatedCartProducts", updatedCartProducts);
 
             dispatch(
               cartActions.addToCart({

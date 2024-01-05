@@ -41,7 +41,7 @@ const CartItem = ({ product }) => {
           const updatedCartProducts = cartProducts.map((product) =>
             product.id === existingProduct.id ? updatedProduct : product
           );
-          console.log("updatedCartProducts", updatedCartProducts);
+          // console.log("updatedCartProducts", updatedCartProducts);
 
           dispatch(
             cartActions.addToCart({
@@ -73,6 +73,7 @@ const CartItem = ({ product }) => {
             method: "DELETE",
           }
         );
+        // console.log("deleteProduct", deleteProduct);
 
         if (deleteProduct.ok) {
           updatedCartProducts = cartProducts.filter(

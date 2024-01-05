@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import logo from "../assets/shop.png";
+import { database_URL } from "../utils/Api";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { Link } from "react-router-dom";
 import { Badge, DialogActions } from "@mui/material";
@@ -22,6 +23,8 @@ const Navbar = () => {
   const cartProducts = useSelector((state) => state.cart.cartProducts);
   const dispatch = useDispatch();
 
+  const modifiedEmail = email.replace("@", "").replace(".", "");
+
   const dialogHandler = () => {
     setOpenDialog(true);
   };
@@ -30,13 +33,27 @@ const Navbar = () => {
     setOpenDialog(false);
   };
 
-  const orderHandler = () => {
-    dispatch(cartActions.clearCart(email));
-    toast.success("Order placed successfully!", {
-      position: "top-right",
-      autoClose: 3000,
-      theme: "colored",
-    });
+  const orderHandler = async () => {
+    try {
+      const deleteProduct = await fetch(
+        `${database_URL}${modifiedEmail}.json`,
+        {
+          method: "DELETE",
+        }
+      );
+      console.log(deleteProduct);
+
+      if (deleteProduct.ok) {
+        dispatch(cartActions.clearCart());
+        toast.success("Order placed successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          theme: "colored",
+        });
+      }
+    } catch (err) {
+      alert(err);
+    }
   };
 
   const openSnakbarHandler = () => {

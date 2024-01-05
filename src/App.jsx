@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
 import Products from "./components/Products";
+import { database_URL } from "./utils/Api";
 import { useSelector, useDispatch } from "react-redux";
 import { authActions } from "./store/authSlice";
 import { cartActions } from "./store/cartSlice";
@@ -13,7 +14,7 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchData = () => {
+    const fetchData = async () => {
       const savedEmail = localStorage.getItem("email") || "";
       const savedToken = localStorage.getItem("token") || "";
 
@@ -21,7 +22,6 @@ const App = () => {
         email: savedEmail,
         idToken: savedToken,
       };
-
       dispatch(authActions.login(data));
     };
 
