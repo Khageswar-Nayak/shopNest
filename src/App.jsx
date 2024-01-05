@@ -24,7 +24,7 @@ const App = () => {
 
       const data = {
         email: savedEmail,
-        token: savedToken,
+        idToken: savedToken,
       };
 
       dispatch(authActions.login(data));

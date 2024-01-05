@@ -49,7 +49,7 @@ const Navbar = () => {
   };
   return (
     <nav className="bg-[#1976D2] pt-[10px] fixed w-full z-50">
-      <div className="container mx-auto flex items-center justify-between px-[10px]  sm:px-4">
+      <div className="container mx-auto flex items-center justify-between px-[10px]  sm:px-4 lg:max-w-[1180px]">
         <Link to="/">
           <i className="text-[28px] font-[fangsong] text-white font-semibold  ">
             E-
@@ -64,7 +64,7 @@ const Navbar = () => {
         <div className="flex  justify-end space-x-4 md:gap-12">
           {/* cart icon for login user */}
           {token && (
-            <Badge badgeContent={cartProducts.length} color="secondary">
+            <Badge badgeContent={cartProducts?.length} color="secondary">
               <AddShoppingCartIcon
                 className=" text-white cursor-pointer"
                 onClick={dialogHandler}

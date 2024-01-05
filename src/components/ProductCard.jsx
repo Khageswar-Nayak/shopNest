@@ -12,11 +12,14 @@ const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const email = useSelector((state) => state.auth.email);
+  const cartProducts = useSelector((state) => state.cart.cartProducts);
 
-  const addToCartHandler = (newProduct) => {
+  const modifiedEmail = email.replace("@", "").replace(".", "");
+
+  const addToCartHandler = async (newProduct) => {
     if (!email) {
       navigate("/login");
-      toast.info("Please Login!", {
+      toast.warn("Please Login!", {
         position: "top-right",
         autoClose: 3000,
         theme: "colored",
@@ -24,18 +27,64 @@ const ProductCard = ({ product }) => {
     } else {
       const modifiedNewProduct = { ...newProduct, quantity: 1 };
 
-      dispatch(cartActions.addToCart({ modifiedNewProduct, email }));
-      setStatus(true);
+      const existingProduct = cartProducts.find(
+        (product) => product.id === modifiedNewProduct.id
+      );
 
-      toast.success("Product added successfully!", {
-        position: "top-right",
-        autoClose: 3000,
-        theme: "colored",
-      });
+      if (existingProduct) {
+        const updatedProduct = {
+          ...existingProduct,
+          quantity: existingProduct.quantity + modifiedNewProduct.quantity,
+          price: existingProduct.price + modifiedNewProduct.price,
+        };
 
-      setTimeout(() => {
-        setStatus(false);
-      }, 5000);
+        const updatedCartProducts = cartProducts.map((product) =>
+          product.id === modifiedNewProduct.id ? updatedProduct : product
+        );
+        console.log("updatedCartProducts", updatedCartProducts);
+
+        dispatch(
+          cartActions.addToCart({
+            updatedCartProducts,
+            price: newProduct.price,
+          })
+        );
+      } else {
+        try {
+          const updatedCartProducts = [...cartProducts, modifiedNewProduct];
+          const postProductInDatabase = await fetch(
+            `${database_URL}${modifiedEmail}.json`,
+            {
+              method: "POST",
+              body: JSON.stringify(modifiedNewProduct),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          dispatch(
+            cartActions.addToCart({
+              updatedCartProducts,
+              price: newProduct.price,
+            })
+          );
+          console.log("postProductInDatabase", postProductInDatabase);
+          if (postProductInDatabase.ok) {
+            setStatus(true);
+            toast.success("Product added successfully!", {
+              position: "top-right",
+              autoClose: 3000,
+              theme: "colored",
+            });
+            setTimeout(() => {
+              setStatus(false);
+            }, 5000);
+          }
+        } catch (err) {
+          alert(err);
+        }
+      }
     }
   };
 

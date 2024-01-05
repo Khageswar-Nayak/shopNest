@@ -10,39 +10,9 @@ const cartSlice = createSlice({
   initialState: initialCartState,
   reducers: {
     addToCart: (state, action) => {
-      const existingProduct = state.cartProducts.find(
-        (product) => product.id === action.payload.modifiedNewProduct.id
-      );
+      state.cartProducts = action.payload.updatedCartProducts;
 
-      if (existingProduct) {
-        const updatedProduct = {
-          ...existingProduct,
-          quantity:
-            existingProduct.quantity +
-            action.payload.modifiedNewProduct.quantity,
-          price:
-            existingProduct.price + action.payload.modifiedNewProduct.price,
-        };
-
-        const updatedCartProducts = state.cartProducts.map((product) =>
-          product.id === action.payload.modifiedNewProduct.id
-            ? updatedProduct
-            : product
-        );
-        state.cartProducts = updatedCartProducts;
-      } else {
-        const newCartProducts = [
-          ...state.cartProducts,
-          action.payload.modifiedNewProduct,
-        ];
-        state.cartProducts = newCartProducts;
-      }
-
-      state.totalAmount += action.payload.modifiedNewProduct.price;
-      localStorage.setItem(
-        `${action.payload.email}`,
-        JSON.stringify(state.cartProducts)
-      );
+      state.totalAmount += action.payload.price;
     },
     removeFromCart: (state, action) => {
       const existingProductIndex = state.cartProducts.findIndex(
