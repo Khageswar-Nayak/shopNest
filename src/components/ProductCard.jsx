@@ -38,20 +38,47 @@ const ProductCard = ({ product }) => {
           price: existingProduct.price + modifiedNewProduct.price,
         };
 
-        const updatedCartProducts = cartProducts.map((product) =>
-          product.id === modifiedNewProduct.id ? updatedProduct : product
-        );
-        console.log("updatedCartProducts", updatedCartProducts);
+        try {
+          const updateProduct = await fetch(
+            `${database_URL}${modifiedEmail}/${existingProduct.firebaseId}.json`,
+            {
+              method: "PUT",
+              body: JSON.stringify(updatedProduct),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
 
-        dispatch(
-          cartActions.addToCart({
-            updatedCartProducts,
-            price: newProduct.price,
-          })
-        );
+          if (updateProduct.ok) {
+            const updatedCartProducts = cartProducts.map((product) =>
+              product.id === modifiedNewProduct.id ? updatedProduct : product
+            );
+            console.log("updatedCartProducts", updatedCartProducts);
+
+            dispatch(
+              cartActions.addToCart({
+                updatedCartProducts,
+                price: newProduct.price,
+              })
+            );
+
+            // notification for user
+            setStatus(true);
+            toast.success("Product added successfully!", {
+              position: "top-right",
+              autoClose: 3000,
+              theme: "colored",
+            });
+            setTimeout(() => {
+              setStatus(false);
+            }, 5000);
+          }
+        } catch (err) {
+          alert(err);
+        }
       } else {
         try {
-          const updatedCartProducts = [...cartProducts, modifiedNewProduct];
           const postProductInDatabase = await fetch(
             `${database_URL}${modifiedEmail}.json`,
             {
@@ -62,15 +89,21 @@ const ProductCard = ({ product }) => {
               },
             }
           );
+          const data = await postProductInDatabase.json();
+          const firebaseIdProduct = {
+            ...newProduct,
+            quantity: 1,
+            firebaseId: data.name,
+          };
+          const updatedCartProducts = [...cartProducts, firebaseIdProduct];
 
-          dispatch(
-            cartActions.addToCart({
-              updatedCartProducts,
-              price: newProduct.price,
-            })
-          );
-          console.log("postProductInDatabase", postProductInDatabase);
           if (postProductInDatabase.ok) {
+            dispatch(
+              cartActions.addToCart({
+                updatedCartProducts,
+                price: newProduct.price,
+              })
+            );
             setStatus(true);
             toast.success("Product added successfully!", {
               position: "top-right",

@@ -1,18 +1,59 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { database_URL } from "../utils/Api";
+import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "../store/cartSlice";
-import { useSelector } from "react-redux";
 
 const CartItem = ({ product }) => {
   const dispatch = useDispatch();
   const email = useSelector((state) => state.auth.email);
+  const cartProducts = useSelector((state) => state.cart.cartProducts);
 
-  const increaseCartItem = (product) => {
-    const price = product.price / product.quantity;
+  const modifiedEmail = email.replace("@", "").replace(".", "");
+
+  const increaseCartItem = async (cartProduct) => {
+    const price = cartProduct.price / cartProduct.quantity;
     const quantity = 1;
-    const modifiedNewProduct = { ...product, price, quantity };
+    // const modifiedNewProduct = { ...product, price, quantity };
 
-    dispatch(cartActions.addToCart({ modifiedNewProduct, email }));
+    const existingProduct = cartProducts.find(
+      (product) => product.id === cartProduct.id
+    );
+
+    if (existingProduct) {
+      const updatedProduct = {
+        ...existingProduct,
+        quantity: existingProduct.quantity + quantity,
+        price: existingProduct.price + price,
+      };
+
+      try {
+        const updateProduct = await fetch(
+          `${database_URL}${modifiedEmail}/${existingProduct.firebaseId}.json`,
+          {
+            method: "PUT",
+            body: JSON.stringify(updatedProduct),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (updateProduct.ok) {
+          const updatedCartProducts = cartProducts.map((product) =>
+            product.id === existingProduct.id ? updatedProduct : product
+          );
+          console.log("updatedCartProducts", updatedCartProducts);
+
+          dispatch(
+            cartActions.addToCart({
+              updatedCartProducts,
+              price: price,
+            })
+          );
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
   };
 
   const decreaseCartItem = (product) => {
