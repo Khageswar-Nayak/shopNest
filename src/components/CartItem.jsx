@@ -56,8 +56,69 @@ const CartItem = ({ product }) => {
     }
   };
 
-  const decreaseCartItem = (product) => {
-    dispatch(cartActions.removeFromCart({ product, email }));
+  const decreaseCartItem = async (cartProduct) => {
+    const existingProductIndex = cartProducts.findIndex(
+      (product) => product.id === cartProduct.id
+    );
+
+    const existingProduct = cartProducts[existingProductIndex];
+
+    let updatedCartProducts;
+
+    if (existingProduct.quantity === 1) {
+      try {
+        const deleteProduct = await fetch(
+          `${database_URL}${modifiedEmail}/${existingProduct.firebaseId}.json`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        if (deleteProduct.ok) {
+          updatedCartProducts = cartProducts.filter(
+            (product) => product.id !== existingProduct.id
+          );
+          dispatch(
+            cartActions.removeFromCart({
+              updatedCartProducts,
+              price: existingProduct.price,
+            })
+          );
+        }
+      } catch (err) {
+        alert(err);
+      }
+    } else {
+      const price =
+        existingProduct.price -
+        existingProduct.price / existingProduct.quantity;
+      const updatedProduct = {
+        ...existingProduct,
+        quantity: existingProduct.quantity - 1,
+        price,
+      };
+
+      try {
+        const updateProduct = await fetch(
+          `${database_URL}${modifiedEmail}/${existingProduct.firebaseId}.json`,
+          {
+            method: "PUT",
+            body: JSON.stringify(updatedProduct),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (updateProduct.ok) {
+          updatedCartProducts = [...cartProducts];
+          updatedCartProducts[existingProductIndex] = updatedProduct;
+          dispatch(cartActions.removeFromCart({ updatedCartProducts, price }));
+        }
+      } catch (err) {
+        alert(err);
+      }
+    }
   };
 
   return (

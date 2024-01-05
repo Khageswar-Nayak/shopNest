@@ -16,11 +16,6 @@ const App = () => {
     const fetchData = () => {
       const savedEmail = localStorage.getItem("email") || "";
       const savedToken = localStorage.getItem("token") || "";
-      const savedCartProducts =
-        JSON.parse(localStorage.getItem(`${savedEmail}`)) || [];
-
-      console.log("savedEmail", savedEmail);
-      console.log("savedCartProducts", savedCartProducts);
 
       const data = {
         email: savedEmail,
@@ -28,7 +23,6 @@ const App = () => {
       };
 
       dispatch(authActions.login(data));
-      dispatch(cartActions.setCart(savedCartProducts));
     };
 
     fetchData();

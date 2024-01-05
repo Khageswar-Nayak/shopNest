@@ -15,42 +15,8 @@ const cartSlice = createSlice({
       state.totalAmount += action.payload.price;
     },
     removeFromCart: (state, action) => {
-      const existingProductIndex = state.cartProducts.findIndex(
-        (product) => product.id === action.payload.product.id
-      );
-
-      const existingProduct = state.cartProducts[existingProductIndex];
-
-      let updatedCartProducts;
-
-      if (existingProduct.quantity === 1) {
-        updatedCartProducts = state.cartProducts.filter(
-          (product) => product.id !== existingProduct.id
-        );
-        state.cartProducts = updatedCartProducts;
-        localStorage.setItem(
-          `${action.payload.email}`,
-          JSON.stringify(state.cartProducts)
-        );
-        state.totalAmount -= existingProduct.price;
-      } else {
-        const updatedProduct = {
-          ...existingProduct,
-          quantity: existingProduct.quantity - 1,
-          price:
-            existingProduct.price -
-            existingProduct.price / existingProduct.quantity,
-        };
-
-        updatedCartProducts = [...state.cartProducts];
-        updatedCartProducts[existingProductIndex] = updatedProduct;
-        state.cartProducts = updatedCartProducts;
-        state.totalAmount -= existingProduct.price / existingProduct.quantity;
-        localStorage.setItem(
-          `${action.payload.email}`,
-          JSON.stringify(state.cartProducts)
-        );
-      }
+      state.cartProducts = action.payload.updatedCartProducts;
+      state.totalAmount -= action.payload.price;
     },
     setCart: (state, action) => {
       state.cartProducts = action.payload;
