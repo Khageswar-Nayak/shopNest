@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Rating from "@mui/material/Rating";
+import { database_URL } from "../utils/Api";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { cartActions } from "../store/cartSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,23 +10,33 @@ import "react-toastify/dist/ReactToastify.css";
 const ProductCard = ({ product }) => {
   const [status, setStatus] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const email = useSelector((state) => state.auth.email);
 
   const addToCartHandler = (newProduct) => {
-    const modifiedNewProduct = { ...newProduct, quantity: 1 };
+    if (!email) {
+      navigate("/login");
+      toast.info("Please Login!", {
+        position: "top-right",
+        autoClose: 3000,
+        theme: "colored",
+      });
+    } else {
+      const modifiedNewProduct = { ...newProduct, quantity: 1 };
 
-    dispatch(cartActions.addToCart({ modifiedNewProduct, email }));
-    setStatus(true);
+      dispatch(cartActions.addToCart({ modifiedNewProduct, email }));
+      setStatus(true);
 
-    toast.success("Product added successfully!", {
-      position: "top-right",
-      autoClose: 3000,
-      theme: "colored",
-    });
+      toast.success("Product added successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        theme: "colored",
+      });
 
-    setTimeout(() => {
-      setStatus(false);
-    }, 5000);
+      setTimeout(() => {
+        setStatus(false);
+      }, 5000);
+    }
   };
 
   return (

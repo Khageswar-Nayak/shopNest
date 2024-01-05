@@ -12,9 +12,9 @@ const authSlice = createSlice({
     login: (state, action) => {
       //   console.log(action);
       state.email = action.payload.email;
-      state.token = action.payload.token;
+      state.token = action.payload.idToken;
       localStorage.setItem("email", action.payload.email);
-      localStorage.setItem("token", action.payload.token);
+      localStorage.setItem("token", action.payload.idToken);
     },
     logout: (state, action) => {
       state.email = "";

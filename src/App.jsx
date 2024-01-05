@@ -38,11 +38,8 @@ const App = () => {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<LoginForm />} />
-          <Route
-            path="/products"
-            element={token ? <Products /> : <LoginForm />}
-          />
+          <Route path="/" element={<Products />} />
+          <Route path="/login" element={<LoginForm />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer />

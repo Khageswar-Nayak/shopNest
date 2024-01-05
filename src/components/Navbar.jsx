@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import logo from "../assets/shop.png";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { Link } from "react-router-dom";
 import { Badge, DialogActions } from "@mui/material";
@@ -47,10 +48,17 @@ const Navbar = () => {
     }
   };
   return (
-    <nav className="bg-[#1976D2] p-4 fixed w-full z-50">
-      <div className="container mx-auto flex items-center justify-between  sm:px-4">
-        <Link to="/products" onClick={openSnakbarHandler}>
-          <div className="text-white text-3xl font-bold">ShopNest</div>
+    <nav className="bg-[#1976D2] pt-[10px] fixed w-full z-50">
+      <div className="container mx-auto flex items-center justify-between px-[10px]  sm:px-4">
+        <Link to="/">
+          <i className="text-[28px] font-[fangsong] text-white font-semibold  ">
+            E-
+          </i>
+          <img
+            className=" inline  h-[46px] w-[108px] md:w-[152px] mt-[-43px] mb-[-16px] "
+            src={logo}
+            alt="logo"
+          />
         </Link>
 
         <div className="flex  justify-end space-x-4 md:gap-12">
@@ -71,12 +79,23 @@ const Navbar = () => {
               onClick={openSnakbarHandler}
             />
           )}
+
+          {/* login button */}
+          {!token && (
+            <Link
+              to="/login"
+              className=" rounded bg-green-500 text-white px-3 pb-[2px] font-medium hover:bg-green-600 transition duration-300 "
+            >
+              Login
+            </Link>
+          )}
+
           {/* logout button for desktop/laptop */}
           {token && (
             <Link
               to="/"
               onClick={() => dispatch(authActions.logout())}
-              className="hidden bg-red-500 text-white px-4 pb-[2px] font-medium rounded-md hover:bg-red-600 transition duration-300 sm:block"
+              className="hidden bg-red-500 text-white px-3 pb-[2px] font-medium rounded hover:bg-red-600 transition duration-300 sm:block"
             >
               Logout
             </Link>
