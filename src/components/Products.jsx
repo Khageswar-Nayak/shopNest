@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Layout from "../layout/Layout";
 import { database_URL } from "../utils/Api";
 import { lazy, Suspense } from "react";
@@ -20,6 +20,7 @@ const Products = () => {
   const dispatch = useDispatch();
 
   const modifiedEmail = email.replace("@", "").replace(".", "");
+  console.log("modifiedEmail", modifiedEmail);
 
   const fetchCartProducts = async () => {
     try {
@@ -36,7 +37,7 @@ const Products = () => {
           ...data[key],
         });
       }
-
+      console.log("loadedProducts", loadedProducts);
       dispatch(cartActions.setCart(loadedProducts));
     } catch (error) {
       alert(error);
@@ -136,7 +137,7 @@ const Products = () => {
 
   return (
     <Layout>
-      <div className=" p-8 pl-4 sm:pl-16 pt-20">
+      <div className=" p-8 pl-4 sm:pl-16 pt-[70px]">
         <div className=" flex flex-col-reverse sm:flex-row gap-[8px] justify-between pb-4 ">
           <div className=" flex justify-between sm:justify-start">
             <select
@@ -155,7 +156,7 @@ const Products = () => {
               onChange={(e) => setSorting(e.target.value)}
               className=" rounded border-[1px] border-slate-500	 focus:border-slate-500 p-1 outline-none w-[60px] sm:w-[163px] ml-1	"
             >
-              <option value="" disabled hidden selected>
+              <option disabled hidden selected>
                 sort
               </option>
               <option>low to high</option>

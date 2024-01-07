@@ -7,6 +7,8 @@ const Cart = () => {
   const cartProducts = useSelector((state) => state.cart.cartProducts);
   const totalAmount = useSelector((state) => state.cart.totalAmount);
 
+  // console.log(cartProducts);
+
   return (
     <>
       <h1 className=" text-center font-serif font-bold pt-2 text-2xl ">Cart</h1>

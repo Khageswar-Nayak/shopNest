@@ -80,7 +80,7 @@ const LoginForm = () => {
             dispatch(authActions.login(data));
 
             navigate("/");
-            toast.success("Welcome to E-shop!", {
+            toast.success("Welcome to e-shop!", {
               position: "top-right",
               theme: "colored",
               autoClose: 3000,
