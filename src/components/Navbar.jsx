@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../assets/shop.png";
 import { database_URL } from "../utils/Api";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
@@ -24,6 +24,33 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   const modifiedEmail = email.replace("@", "").replace(".", "");
+
+  const fetchCartProducts = async () => {
+    console.log("modifiedEmail", modifiedEmail);
+    if (modifiedEmail && email) {
+      try {
+        const getCartProducts = await fetch(
+          `${database_URL}${modifiedEmail}.json`
+        );
+
+        const data = await getCartProducts.json();
+        console.log("data", data);
+
+        const loadedProducts = [];
+        for (const key in data) {
+          loadedProducts.push({ ...data[key] });
+        }
+        console.log("loadedProducts", loadedProducts);
+        dispatch(cartActions.setCart(loadedProducts));
+      } catch (error) {
+        alert(error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchCartProducts();
+  }, [email]);
 
   const dialogHandler = () => {
     setOpenDialog(true);

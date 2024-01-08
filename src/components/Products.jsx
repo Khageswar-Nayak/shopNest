@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Layout from "../layout/Layout";
-import { database_URL } from "../utils/Api";
+// import { database_URL } from "../utils/Api";
 import { lazy, Suspense } from "react";
 import ProductSkeleton from "./ProductSkeleton";
 import { Scrollbars } from "react-custom-scrollbars-2";
-import { useSelector, useDispatch } from "react-redux";
-import { cartActions } from "../store/cartSlice";
+// import { useSelector, useDispatch } from "react-redux";
+// import { cartActions } from "../store/cartSlice";
 
 const ProductCard = lazy(() => import("./ProductCard"));
 
@@ -16,37 +16,8 @@ const Products = () => {
   const [sorting, setSorting] = useState("");
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const email = useSelector((state) => state.auth.email);
-  const dispatch = useDispatch();
-
-  const modifiedEmail = email.replace("@", "").replace(".", "");
-  console.log("modifiedEmail", modifiedEmail);
-
-  const fetchCartProducts = async () => {
-    try {
-      const getCartProducts = await fetch(
-        `${database_URL}${modifiedEmail}.json`
-      );
-
-      const data = await getCartProducts.json();
-      // console.log("data", data);
-
-      const loadedProducts = [];
-      for (const key in data) {
-        loadedProducts.push({
-          ...data[key],
-        });
-      }
-      console.log("loadedProducts", loadedProducts);
-      dispatch(cartActions.setCart(loadedProducts));
-    } catch (error) {
-      alert(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchCartProducts();
-  }, []);
+  // const email = useSelector((state) => state.auth.email);
+  // const dispatch = useDispatch();
 
   useEffect(() => {
     fetchData().then((products) => {
